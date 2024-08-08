@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: get_sales_by_product
+    description: "Aggregated sales data by product"
+    columns:
+      - name: ProductName
+        description: "Name of the product"
+        tests:
+          - not_null
+          - unique
+
+      - name: TotalQuantity
+        description: "Total quantity sold"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Example range, adjust as needed
+
+      - name: TotalSales
+        description: "Total sales amount"
+        tests:
+          - not_null
+          - relationships:
+              to: source('sqlite_source', 'DimProduct')
+              field: ProductID
+
+
+

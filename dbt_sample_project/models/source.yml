@@ -1,0 +1,61 @@
+version: 2
+
+sources:
+  - name: sqlite_source
+    database: C:/Users/vdanduru/Desktop/my_dbt_project/DBT_Project/dbt_sample.db
+    schema: main
+    tables:
+      - name: DimProduct
+        description: "Product dimension table"
+        columns:
+          - name: ProductID
+            description: "Unique identifier for each product"
+            tests:
+              - not_null
+              - unique
+          - name: ProductName
+            description: "Name of the product"
+          - name: Category
+            description: "Product category"
+      - name: DimDate
+        description: "Date dimension table"
+        columns:
+          - name: DateID
+            description: "Unique identifier for each date"
+            tests:
+              - not_null
+              - unique
+          - name: Date
+            description: "Date"
+          - name: Year
+            description: "Year"
+          - name: Month
+            description: "Month"
+          - name: Day
+            description: "Day"
+      - name: FactSales
+        description: "Fact table storing sales data"
+        columns:
+          - name: SaleID
+            description: "Unique identifier for each sale"
+            tests:
+              - not_null
+              - unique
+          - name: ProductID
+            description: "Foreign key to the product dimension"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('sqlite_source', 'DimProduct')
+                  field: ProductID
+          - name: DateID
+            description: "Foreign key to the date dimension"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('sqlite_source', 'DimDate')
+                  field: DateID
+          - name: Quantity
+            description: "Quantity sold"
+          - name: TotalAmount
+            description: "Total sales amount"
